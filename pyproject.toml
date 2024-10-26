@@ -1,0 +1,48 @@
+# pyproject.toml
+[tool.poetry]
+name = "ppt-parser"
+version = "0.1.0"
+description = "PPT文档解析器"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "ppt_parser"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pydantic = "^1.8.2"
+python-dotenv = "^0.19.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^6.2.4"
+pytest-asyncio = "^0.15.1"
+pytest-cov = "^2.12.1"
+black = "^21.5b2"
+pylint = "^2.9.6"
+mypy = "^0.910"
+ipython = "^7.26.0"
+
+# 添加代码格式化配置
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+
+# 添加pylint配置
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring
+    "C0103",  # invalid-name
+    "C0330",  # bad-continuation
+    "R0903",  # too-few-public-methods
+]
+
+# 添加pytest配置
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --cov=ppt_parser"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
