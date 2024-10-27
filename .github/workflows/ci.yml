@@ -1,0 +1,67 @@
+# .github/workflows/ci.yml
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 步骤 1: 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 步骤 2: 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # 步骤 3: 安装 Poetry
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::$HOME/.local/bin"
+
+      # 步骤 4: 缓存 Poetry 依赖
+      - name: Cache Poetry dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pip
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      # 步骤 5: 安装依赖
+      - name: Install dependencies
+        run: poetry install
+
+      # 步骤 6: 运行代码格式化检查
+      - name: Run Black
+        run: poetry run black --check .
+
+      # 步骤 7: 运行静态代码分析
+      - name: Run Pylint
+        run: poetry run pylint ppt_parser
+
+      # 步骤 8: 运行类型检查
+      - name: Run MyPy
+        run: poetry run mypy ppt_parser
+
+      # 步骤 9: 运行测试
+      - name: Run Tests
+        run: poetry run pytest --cov=ppt_parser
+
+      # 步骤 10: 上传覆盖率报告到 Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
