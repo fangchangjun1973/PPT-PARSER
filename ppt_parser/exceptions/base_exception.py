@@ -3,13 +3,16 @@ PPT解析器基础异常类定义
 """
 from typing import Dict, Any, Optional
 
+
 class PPTParserBaseError(Exception):
     """所有PPT解析器异常的基类"""
-    
-    def __init__(self, message: str, error_code: str, details: Optional[Dict[str, Any]] = None):
+
+    def __init__(
+        self, message: str, error_code: str, details: Optional[Dict[str, Any]] = None
+    ):
         """
         初始化基础异常
-        
+
         Args:
             message: 错误信息
             error_code: 错误代码

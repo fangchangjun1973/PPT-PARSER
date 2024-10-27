@@ -9,20 +9,19 @@ from ppt_parser.core import DocumentBuilder
 from ppt_parser.models.document import Document, Slide, Element
 from ppt_parser.exceptions import BuildDocumentError
 
+
 @pytest.fixture
 def document_builder():
     """创建文档构建器实例"""
     return DocumentBuilder()
+
 
 @pytest.fixture
 def valid_doc_data():
     """有效的文档数据"""
     return {
         "title": "测试文档",
-        "metadata": {
-            "author": "测试作者",
-            "version": "1.0"
-        },
+        "metadata": {"author": "测试作者", "version": "1.0"},
         "slides": [
             {
                 "title": "第一页",
@@ -31,39 +30,38 @@ def valid_doc_data():
                         "type": "text",
                         "content": "Hello World",
                         "position": {"x": 100, "y": 100},
-                        "style": {
-                            "font_size": 24,
-                            "color": "#000000"
-                        }
+                        "style": {"font_size": 24, "color": "#000000"},
                     }
                 ],
-                "background": {"color": "#FFFFFF"}
+                "background": {"color": "#FFFFFF"},
             }
-        ]
+        ],
     }
+
 
 @pytest.mark.asyncio
 async def test_build_document_success(document_builder, valid_doc_data):
     """测试成功构建文档"""
     document = await document_builder.build_document(valid_doc_data)
-    
+
     # 验证文档基本信息
     assert isinstance(document, Document)
     assert document.title == valid_doc_data["title"]
     assert document.metadata == valid_doc_data["metadata"]
-    
+
     # 验证幻灯片
     assert len(document.slides) == 1
     slide = document.slides[0]
     assert isinstance(slide, Slide)
     assert slide.title == valid_doc_data["slides"][0]["title"]
-    
+
     # 验证元素
     assert len(slide.elements) == 1
     element = slide.elements[0]
     assert isinstance(element, Element)
     assert element.type == valid_doc_data["slides"][0]["elements"][0]["type"]
     assert element.content == valid_doc_data["slides"][0]["elements"][0]["content"]
+
 
 @pytest.mark.asyncio
 async def test_build_document_missing_title(document_builder, valid_doc_data):
@@ -73,6 +71,7 @@ async def test_build_document_missing_title(document_builder, valid_doc_data):
         await document_builder.build_document(valid_doc_data)
     assert "缺少必需字段" in str(exc_info.value)
 
+
 @pytest.mark.asyncio
 async def test_build_document_invalid_element(document_builder, valid_doc_data):
     """测试无效的元素数据"""
@@ -81,6 +80,7 @@ async def test_build_document_invalid_element(document_builder, valid_doc_data):
         await document_builder.build_document(valid_doc_data)
     assert "元素构建失败" in str(exc_info.value)
 
+
 @pytest.mark.asyncio
 async def test_build_document_with_empty_slides(document_builder, valid_doc_data):
     """测试空幻灯片列表"""
@@ -88,6 +88,7 @@ async def test_build_document_with_empty_slides(document_builder, valid_doc_data
     document = await document_builder.build_document(valid_doc_data)
     assert isinstance(document, Document)
     assert len(document.slides) == 0
+
 
 @pytest.mark.asyncio
 async def test_build_document_with_multiple_slides(document_builder, valid_doc_data):

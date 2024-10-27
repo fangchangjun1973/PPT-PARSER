@@ -6,7 +6,4 @@ PPT解析器插件系统
 from .base_plugin import BasePlugin
 from .json_plugin import JSONPlugin
 
-__all__ = [
-    'BasePlugin',
-    'JSONPlugin'
-]
+__all__ = ["BasePlugin", "JSONPlugin"]

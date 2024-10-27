@@ -36,6 +36,7 @@ class Position(BaseModel):
         y: Y坐标 (0-1000)
         unit: 单位 ("px", "pt", "in", "cm")
     """
+
     x: float = Field(ge=0, le=1000, description="X坐标")
     y: float = Field(ge=0, le=1000, description="Y坐标")
     unit: Literal["px", "pt", "in", "cm"] = Field(default="px", description="单位")
@@ -56,29 +57,26 @@ class Style(BaseModel):
         opacity: 透明度 (0-1)
         rotation: 旋转角度 (0-360)
     """
+
     font_size: Optional[int] = Field(None, ge=1, le=1000, description="字体大小")
     font_family: Optional[str] = Field(None, description="字体系列")
     color: Optional[str] = Field(
-        None,
-        pattern="^#[0-9A-Fa-f]{6}$",
-        description="颜色(十六进制，例如 #FF0000)"
+        None, pattern="^#[0-9A-Fa-f]{6}$", description="颜色(十六进制，例如 #FF0000)"
     )
     bold: Optional[bool] = Field(False, description="是否加粗")
     italic: Optional[bool] = Field(False, description="是否斜体")
     underline: Optional[bool] = Field(False, description="是否下划线")
     background_color: Optional[str] = Field(
-        None,
-        pattern="^#[0-9A-Fa-f]{6}$",
-        description="背景颜色(十六进制)"
+        None, pattern="^#[0-9A-Fa-f]{6}$", description="背景颜色(十六进制)"
     )
     opacity: Optional[float] = Field(1.0, ge=0, le=1, description="透明度")
     rotation: Optional[float] = Field(0.0, ge=0, le=360, description="旋转角度")
 
-    @field_validator('color', 'background_color', mode='before')
+    @field_validator("color", "background_color", mode="before")
     def validate_color(cls, v):
         """验证颜色格式"""
-        if v is not None and not v.startswith('#'):
-            raise ValueError('颜色值必须以#开头')
+        if v is not None and not v.startswith("#"):
+            raise ValueError("颜色值必须以#开头")
         return v
 
 
@@ -93,6 +91,7 @@ class Element(BaseModel):
         style: 元素样式
         size: 元素大小
     """
+
     type: Literal["text", "image", "shape", "chart"] = Field(..., description="元素类型")
     content: Any = Field(..., description="元素内容")
     position: Position = Field(..., description="元素位置")
@@ -101,16 +100,14 @@ class Element(BaseModel):
 
     class Config:
         """模型配置"""
+
         extra = "allow"
         json_schema_extra = {  # 将 schema_extra 改为 json_schema_extra
             "example": {
                 "type": "text",
                 "content": "示例文本",
                 "position": {"x": 100, "y": 100, "unit": "px"},
-                "style": {
-                    "font_size": 24,
-                    "color": "#000000"
-                }
+                "style": {"font_size": 24, "color": "#000000"},
             }
         }
 
@@ -126,6 +123,7 @@ class Slide(BaseModel):
         layout: 布局类型
         notes: 备注
     """
+
     title: str = Field(..., min_length=1, max_length=100, description="幻灯片标题")
     elements: List[Element] = Field(default_factory=list, description="幻灯片元素列表")
     background: Optional[Dict[str, Any]] = Field(None, description="背景设置")
@@ -134,6 +132,7 @@ class Slide(BaseModel):
 
     class Config:
         """模型配置"""
+
         extra = "allow"
 
 
@@ -147,6 +146,7 @@ class Document(BaseModel):
         theme: 主题设置
         metadata: 元数据
     """
+
     title: str = Field(..., min_length=1, max_length=200, description="文档标题")
     slides: List[Slide] = Field(default_factory=list, description="幻灯片列表")
     theme: Optional[Dict[str, Any]] = Field(None, description="主题设置")
@@ -155,9 +155,9 @@ class Document(BaseModel):
             "author": "",
             "created": "",
             "modified": "",
-            "version": "1.0"
+            "version": "1.0",
         },
-        description="元数据"
+        description="元数据",
     )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -165,11 +165,11 @@ class Document(BaseModel):
         return self.model_dump(exclude_none=True)  # 使用 model_dump 替代 dict
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Document':
+    def from_dict(cls, data: Dict[str, Any]) -> "Document":
         """从字典创建文档对象"""
         return cls.model_validate(data)  # 使用 model_validate 替代 parse_obj
 
     class Config:
         """模型配置"""
-        extra = "allow"
 
+        extra = "allow"

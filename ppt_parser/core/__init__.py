@@ -8,9 +8,4 @@ from .validator import Validator
 from .document_builder import DocumentBuilder
 from .plugin_manager import PluginManager
 
-__all__ = [
-    'ParserEngine',
-    'Validator',
-    'DocumentBuilder',
-    'PluginManager'
-]
+__all__ = ["ParserEngine", "Validator", "DocumentBuilder", "PluginManager"]

@@ -10,9 +10,9 @@ from .build_document_error import BuildDocumentError
 from .plugin_error import PluginError  # 添加这一行
 
 __all__ = [
-    'PPTParserBaseError',
-    'ParseError',
-    'ValidationError',
-    'BuildDocumentError',
-    'PluginError'  # 添加这一行
+    "PPTParserBaseError",
+    "ParseError",
+    "ValidationError",
+    "BuildDocumentError",
+    "PluginError",  # 添加这一行
 ]

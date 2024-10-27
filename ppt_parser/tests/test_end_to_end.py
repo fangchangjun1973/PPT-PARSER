@@ -9,6 +9,7 @@ from ppt_parser.core import ParserEngine
 from ppt_parser.plugins import JSONPlugin
 from ppt_parser.models.document import Document, Slide, Element
 
+
 @pytest.fixture
 async def setup_engine():
     """设置解析引擎"""
@@ -16,6 +17,7 @@ async def setup_engine():
     plugin = JSONPlugin()
     engine.plugin_manager.register_plugin(plugin)
     return engine
+
 
 @pytest.mark.asyncio
 async def test_end_to_end_flow(setup_engine):
@@ -63,16 +65,16 @@ async def test_end_to_end_flow(setup_engine):
         ]
     }
     """
-    
+
     # 执行解析
     document = await setup_engine.parse(input_json, "json")
-    
+
     # 验证文档结构
     assert isinstance(document, Document)
     assert document.title == "端到端测试"
     assert document.metadata["author"] == "测试作者"
     assert len(document.slides) == 2
-    
+
     # 验证第一页
     slide1 = document.slides[0]
     assert isinstance(slide1, Slide)
@@ -80,14 +82,14 @@ async def test_end_to_end_flow(setup_engine):
     assert len(slide1.elements) == 2
     assert slide1.elements[0].type == "text"
     assert slide1.elements[1].type == "image"
-    
+
     # 验证第二页
     slide2 = document.slides[1]
     assert isinstance(slide2, Slide)
     assert slide2.title == "第二页"
     assert len(slide2.elements) == 1
     assert slide2.elements[0].type == "chart"
-    
+
     # 验证元素属性
     text_element = slide1.elements[0]
     assert text_element.content == "标题文本"

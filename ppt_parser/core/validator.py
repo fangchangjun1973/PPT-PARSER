@@ -7,36 +7,37 @@ from typing import Dict, Any, List, Optional
 from ..exceptions import ValidationError
 from ..models.document import Document, Slide, Element
 
+
 class Validator:
     """数据验证器，负责验证解析后的数据"""
 
     async def validate(self, data: Dict[str, Any]) -> bool:
         """
         验证数据是否符合要求
-        
+
         Args:
             data: 要验证的数据字典
-            
+
         Returns:
             bool: 验证是否通过
-            
+
         Raises:
             ValidationError: 验证失败
         """
         try:
             # 验证基本结构
             self._validate_structure(data)
-            
+
             # 验证文档属性
             self._validate_document(data)
-            
+
             # 验证幻灯片
             if "slides" in data:
                 for slide_data in data["slides"]:
                     self._validate_slide(slide_data)
-                    
+
             return True
-            
+
         except ValidationError:
             raise
         except Exception as e:

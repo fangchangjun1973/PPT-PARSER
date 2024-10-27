@@ -12,8 +12,12 @@ from .base_exception import PPTParserBaseError
 class PluginError(PPTParserBaseError):
     """插件错误异常类"""
 
-    def __init__(self, message: str, plugin_name: Optional[str] = None,
-                 details: Optional[Dict[str, Any]] = None):
+    def __init__(
+        self,
+        message: str,
+        plugin_name: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+    ):
         """
         初始化插件错误异常
 
@@ -24,11 +28,9 @@ class PluginError(PPTParserBaseError):
         """
         error_details = details or {}
         if plugin_name:
-            error_details['plugin_name'] = plugin_name
+            error_details["plugin_name"] = plugin_name
 
         super().__init__(
-            message=message,
-            error_code='PLUGIN_ERROR',
-            details=error_details
+            message=message, error_code="PLUGIN_ERROR", details=error_details
         )
         self.plugin_name = plugin_name
